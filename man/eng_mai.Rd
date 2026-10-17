@@ -14,7 +14,7 @@ Formatted chunk output, as from [knitr::engine_output()].
 }
 \description{
 Loading rmai registers this engine with knitr, so R Markdown and Quarto
-documents can contain ```` ```{mai} ```` chunks. Each chunk runs in a
+documents can contain chunks with the engine name `mai`. Each chunk runs in a
 fresh mai process. To build on earlier chunks, give them a `label` and
 list those labels in the chunk option `mai.include`, or `include` a file.
 }
