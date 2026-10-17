@@ -148,8 +148,8 @@ mai_compare(
   reps = 3
 )
 #>   language  seconds  speedup
-#> 1      mai 0.015331 2.804775
-#> 2        R 0.043000 1.000000
+#> 1      mai 0.009426 2.652238
+#> 2        R 0.025000 1.000000
 ```
 
 See the [mai documentation](https://mai-lib.github.io/mai/), especially

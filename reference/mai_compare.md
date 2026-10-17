@@ -42,6 +42,6 @@ if (mai_available()) {
     reps = 3)
 }
 #>   language  seconds  speedup
-#> 1      mai 0.011905 1.847963
-#> 2        R 0.022000 1.000000
+#> 1      mai 0.005547 2.163332
+#> 2        R 0.012000 1.000000
 ```
