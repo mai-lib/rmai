@@ -33,7 +33,10 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: pkgdown-${{ github.ref }}
+  # Key pull request runs by number: when a pull request is merged, its
+  # closing run has github.ref = refs/heads/main and would otherwise cancel
+  # the push run that publishes the site.
+  group: pkgdown-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
