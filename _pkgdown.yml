@@ -1,0 +1,14 @@
+url: https://mai-lib.github.io/rmai/
+
+template:
+  bootstrap: 5
+  light-switch: true
+
+navbar:
+  structure:
+    right: [search, mai, github, lightswitch]
+  components:
+    mai:
+      text: mai
+      href: https://mai-lib.github.io/mai/
+      aria-label: The mai language documentation

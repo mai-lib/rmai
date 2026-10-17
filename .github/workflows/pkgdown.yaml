@@ -1,0 +1,91 @@
+name: pkgdown
+
+# Builds the pkgdown site, including the vignette run against a real mai
+# build.
+#
+# - Pushes to main publish the site to the gh-pages branch, served at
+#   https://mai-lib.github.io/rmai/
+# - Pull requests that touch the docs (R/ holds the roxygen source) get a
+#   preview at https://mai-lib.github.io/rmai/pr-preview/pr-<number>/ and a
+#   comment with the link. The preview is removed when the pull request
+#   closes.
+#
+# Pull requests from forks are built but not previewed, because their token
+# cannot push to gh-pages.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+    paths:
+      - 'R/**'
+      - 'man/**'
+      - 'vignettes/**'
+      - 'README.md'
+      - 'DESCRIPTION'
+      - '_pkgdown.yml'
+      - '.github/workflows/pkgdown.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pkgdown-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pkgdown:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build mai
+        if: github.event.action != 'closed'
+        run: |
+          sudo apt-get update && sudo apt-get install -y bison m4 libreadline-dev valgrind
+          git clone --depth 1 https://github.com/mai-lib/mai "$RUNNER_TEMP/mai"
+          make -C "$RUNNER_TEMP/mai" build CTUNE=
+          echo "MAI_PATH=$RUNNER_TEMP/mai/build/main" >> "$GITHUB_ENV"
+
+      - uses: r-lib/actions/setup-pandoc@v2
+        if: github.event.action != 'closed'
+
+      - uses: r-lib/actions/setup-r@v2
+        if: github.event.action != 'closed'
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        if: github.event.action != 'closed'
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
+
+      - name: Build site
+        if: github.event.action != 'closed'
+        shell: Rscript {0}
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+
+      - name: Publish site
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs
+          branch: gh-pages
+          clean-exclude: pr-preview/
+
+      - name: Publish or remove preview
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: docs
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
