@@ -12,7 +12,8 @@ Description: Helpers for 'mai', the compiled statistical computing language
     source, and write 'mai' chunks in R Markdown and Quarto documents through
     a 'knitr' engine.
 License: GPL-2
-URL: https://github.com/mai-lib/rmai, https://github.com/mai-lib/mai
+URL: https://mai-lib.github.io/rmai/, https://github.com/mai-lib/rmai,
+    https://github.com/mai-lib/mai
 BugReports: https://github.com/mai-lib/rmai/issues
 Encoding: UTF-8
 Imports:
