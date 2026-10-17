@@ -93,6 +93,11 @@ mai_eval("m * 10.0", m = m)
 mai_eval("!b", b = c(TRUE, NA, FALSE))
 ```
 
+For large results, `.altrep = TRUE` (or `options(rmai.altrep = TRUE)`)
+leaves the result in mai's output file, mapped into memory, and returns an
+ALTREP vector over it, so R reads only the elements you use. See
+`?mai_eval` and `?mai_vec_info`.
+
 ## mai chunks in R Markdown and Quarto
 
 Loading rmai registers a `mai` knitr engine. Each chunk runs in a fresh mai
@@ -135,7 +140,7 @@ mai_compare(
 )
 ```
 
-See the [mai documentation](https://github.com/mai-lib/mai/tree/main/docs),
-especially "Differences from R", before writing much mai: for example `7 / 2`
-is `3`, and assigning to an undeclared variable inside a function sets a
-global.
+See the [mai documentation](https://mai-lib.github.io/mai/), especially
+[Differences from R](https://mai-lib.github.io/mai/differences-from-r/),
+before writing much mai: for example `7 / 2` is `3`, and assigning to an
+undeclared variable inside a function sets a global.

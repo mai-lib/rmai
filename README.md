@@ -1,5 +1,8 @@
 # rmai
 
+[![R-CMD-check](https://github.com/mai-lib/rmai/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mai-lib/rmai/actions/workflows/R-CMD-check.yaml)
+[![Docs](https://img.shields.io/badge/docs-mai--lib.github.io%2Frmai-blue)](https://mai-lib.github.io/rmai/)
+
 Use [mai](https://github.com/mai-lib/mai), the compiled statistical
 computing language from Brendan McArdle's 2018 University of Auckland PhD
 thesis, from R.
@@ -7,6 +10,9 @@ thesis, from R.
 mai reads a lot like R, but compiles loops and function calls to fast
 bytecode. rmai builds the mai executable, passes R data to it and brings
 results back, and lets you write `{mai}` chunks in R Markdown and Quarto.
+The [package site](https://mai-lib.github.io/rmai/) has the function
+reference and the vignette,
+[Using mai from R](https://mai-lib.github.io/rmai/articles/rmai.html).
 
 ```r
 # install.packages("remotes")
@@ -108,7 +114,7 @@ installed by `mai_install()`, then `mai` on the `PATH`.
 
 ## Read before writing much mai
 
-mai is not R. See [Differences from R](https://github.com/mai-lib/mai/blob/main/docs/differences-from-r.md):
+mai is not R. See [Differences from R](https://mai-lib.github.io/mai/differences-from-r/):
 for example `7 / 2` is `3`, and assigning to an undeclared variable inside a
 function sets a global.
 
