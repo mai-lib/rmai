@@ -8,9 +8,10 @@ Authors@R: c(
 Description: Helpers for 'mai', the compiled statistical computing language
     described in Brendan McArdle's 2018 University of Auckland PhD thesis
     "A Compiled Language for Statistical Computing". Run 'mai' code and
-    scripts from R, time 'mai' against R, build the 'mai' executable from
-    source, and write 'mai' chunks in R Markdown and Quarto documents through
-    a 'knitr' engine.
+    scripts from R, evaluate 'mai' expressions on R vectors and arrays (with
+    results optionally returned as memory-mapped ALTREP vectors), time 'mai'
+    against R, build the 'mai' executable from source, and write 'mai'
+    chunks in R Markdown and Quarto documents through a 'knitr' engine.
 License: GPL-2
 URL: https://mai-lib.github.io/rmai/, https://github.com/mai-lib/rmai,
     https://github.com/mai-lib/mai
