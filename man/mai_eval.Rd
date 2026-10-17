@@ -4,7 +4,13 @@
 \alias{mai_eval}
 \title{Evaluate mai code on R data and return an R value}
 \usage{
-mai_eval(expr, ..., .setup = NULL, .wd = getwd())
+mai_eval(
+  expr,
+  ...,
+  .setup = NULL,
+  .wd = getwd(),
+  .altrep = getOption("rmai.altrep", FALSE)
+)
 }
 \arguments{
 \item{expr}{mai code, as a string.}
@@ -15,6 +21,11 @@ logical) to make available in mai.}
 \item{.setup}{mai code to run first, such as function definitions.}
 
 \item{.wd}{Working directory for the mai process.}
+
+\item{.altrep}{If `TRUE`, a vector or array result is not read into R
+but returned as an ALTREP vector over mai's output, mapped into memory.
+It behaves as an ordinary R vector; see [mai_vec_info()]. The default
+comes from `getOption("rmai.altrep", FALSE)`.}
 }
 \value{
 An R vector or array.

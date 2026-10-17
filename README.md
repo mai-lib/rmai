@@ -35,6 +35,33 @@ mai_eval("m * 10.0", m = matrix(as.double(1:6), 2))
 Named arguments become `const` globals in mai. Double, integer and logical
 vectors, matrices and arrays go in and come back exactly, `NA` included.
 
+## Results as ALTREP vectors
+
+With `.altrep = TRUE` (or `options(rmai.altrep = TRUE)`), a vector or array
+result is not read into R. It stays in mai's output, mapped into memory,
+and R gets an ALTREP vector over it that behaves as an ordinary vector,
+matrix or array.
+
+```r
+r <- mai_eval("m * 2.0", m = matrix(runif(1e6), 1000), .altrep = TRUE)
+r[10, 1:5]          # reads 5 values, not a million
+mai_vec_info(r)     # what R has asked for: elt, region, dataptr, array_subset
+```
+
+Integers are used in place. Doubles are too, once mai's `NA` values are
+rewritten as R's on the first full data request. Logicals are converted to
+R's layout on the first full data request, since mai stores them in one
+byte.
+
+On stock R, `r[i, j, k]` asks for one element at a time. On an R with the
+proposed `Extract_array_subset` ALTREP method (the `array-subset` variant
+in [mdsumner/r-variants](https://github.com/mdsumner/r-variants)), rmai
+answers it in one call, and `mai_has_array_subset()` is `TRUE`.
+`tools/r-variants-array-subset.sh` runs the ALTREP tests in that image.
+
+Once rmai runs mai as a library rather than a separate process, the same
+vectors can point at mai's memory directly.
+
 ## Run scripts and code
 
 ```r

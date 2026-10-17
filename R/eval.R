@@ -21,6 +21,10 @@
 #'   logical) to make available in mai.
 #' @param .setup mai code to run first, such as function definitions.
 #' @param .wd Working directory for the mai process.
+#' @param .altrep If `TRUE`, a vector or array result is not read into R
+#'   but returned as an ALTREP vector over mai's output, mapped into memory.
+#'   It behaves as an ordinary R vector; see [mai_vec_info()]. The default
+#'   comes from `getOption("rmai.altrep", FALSE)`.
 #' @return An R vector or array.
 #' @examples
 #' if (mai_available()) {
@@ -37,7 +41,8 @@
 #'   mai_eval("m * 10", m = m)
 #' }
 #' @export
-mai_eval <- function(expr, ..., .setup = NULL, .wd = getwd()) {
+mai_eval <- function(expr, ..., .setup = NULL, .wd = getwd(),
+                     .altrep = getOption("rmai.altrep", FALSE)) {
   data <- list(...)
   if (length(data) && (is.null(names(data)) || any(!nzchar(names(data))))) {
     stop("every argument in ... must be named.", call. = FALSE)
@@ -65,7 +70,7 @@ mai_eval <- function(expr, ..., .setup = NULL, .wd = getwd()) {
   }
   if (at > 1) cat(out[seq_len(at - 1)], sep = "\n")
   info <- out[-seq_len(at)]
-  get_value(info, res_file)
+  get_value(info, res_file, altrep = isTRUE(.altrep))
 }
 
 mai_type <- function(value) {
@@ -173,7 +178,7 @@ emit_code <- function(path) {
   )
 }
 
-get_value <- function(info, path) {
+get_value <- function(info, path, altrep = FALSE) {
   type_line <- info[1]
   elt <- sub("^(vector|array)\\((.*)\\)$", "\\2", type_line)
   if (!file.exists(path) || !elt %in% names(eltsize)) {
@@ -181,12 +186,14 @@ get_value <- function(info, path) {
             "returning its printed form.", call. = FALSE)
     return(paste(info[-1], collapse = "\n"))
   }
-  x <- read_raw(path, elt)
+  dims <- NULL
   if (startsWith(type_line, "array(")) {
     shape_line <- info[3]
     dims <- as.integer(strsplit(trimws(sub("^\\[[0-9 ]+\\]", "", shape_line)),
                                 "[[:space:]]+")[[1]])
-    dim(x) <- dims
   }
+  if (altrep) return(mai_vec_from_file(path, elt, dims))
+  x <- read_raw(path, elt)
+  if (!is.null(dims)) dim(x) <- dims
   x
 }
