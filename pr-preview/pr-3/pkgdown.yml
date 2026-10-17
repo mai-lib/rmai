@@ -1,9 +1,0 @@
-pandoc: 3.8.3
-pkgdown: 2.2.1
-pkgdown_sha: ~
-articles:
-  rmai: rmai.html
-last_built: 2026-10-17T03:46Z
-urls:
-  reference: https://mai-lib.github.io/rmai/reference
-  article: https://mai-lib.github.io/rmai/articles
